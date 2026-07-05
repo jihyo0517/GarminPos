@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="노트북 IP" />
+    <EditText android:id="@+id/ip" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="text" />
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="포트" />
+    <EditText android:id="@+id/port" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" />
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="기기 이름" />
+    <EditText android:id="@+id/device" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="text" />
+
+    <Button android:id="@+id/save" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="저장" />
+    <Button android:id="@+id/test" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="연결 테스트" />
+    <Button android:id="@+id/openA11y" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="접근성 설정 열기" />
+</LinearLayout>

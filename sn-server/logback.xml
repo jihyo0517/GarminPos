@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 로그 디렉터리: 실행 시 -DSNSERVER_LOG_DIR 로 주입, 없으면 작업폴더의 logs -->
+    <property name="LOG_DIR" value="${SNSERVER_LOG_DIR:-logs}" />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{0} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 날짜 분리/롤링 없이 단일 파일에 계속 누적 (append) -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_DIR}/snserver.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{0} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 운용단계 임계값: INFO. 문제 추적 시 이 값을 DEBUG 로 내리면 재컴파일 없이 적용 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>

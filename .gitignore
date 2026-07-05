@@ -1,0 +1,18 @@
+# Android / Gradle (garminpos-app)
+*.iml
+.gradle/
+.idea/caches/
+.idea/workspace.xml
+.kotlin/
+local.properties
+build/
+.cxx/
+.externalNativeBuild/
+captures/
+.DS_Store
+
+# Java build outputs (sn-server)
+*.class
+sn-server/out/
+sn-server/dist/
+sn-server/pkg/
