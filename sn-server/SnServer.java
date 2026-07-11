@@ -83,9 +83,9 @@ public class SnServer {
         frame.addWindowListener(new WindowAdapter() {
             @Override public void windowClosing(WindowEvent e) {
                 int r = JOptionPane.showConfirmDialog(frame,
-                        "SN 수신기를 종료할까요?\n종료하면 태블릿 스캔을 받을 수 없습니다.",
-                        "종료 확인", JOptionPane.YES_NO_OPTION);
-                if (r == JOptionPane.YES_OPTION) {
+                        "SN 수신기를 종료하시겠습니까?\n종료하면 태블릿 스캔을 받을 수 없습니다.",
+                        "종료 확인", JOptionPane.OK_CANCEL_OPTION);
+                if (r == JOptionPane.OK_OPTION) {
                     log.info("사용자가 창을 닫아 종료");
                     System.exit(0);
                 }
