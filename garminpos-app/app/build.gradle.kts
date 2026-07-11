@@ -33,6 +33,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true // 단위 테스트에서 android.util.Log 호출 허용
+    }
 }
 
 dependencies {

@@ -29,7 +29,9 @@ class SettingsActivity : AppCompatActivity() {
             p.laptopIp = ip.text.toString().trim()
             p.port = port.text.toString().trim().toIntOrNull() ?: 8000
             p.device = device.text.toString().trim()
-            ScanSender(p.baseUrl, p.device).send("PING", System.currentTimeMillis())
+            val s = ScanSender(p, p.device)
+            s.send("PING", System.currentTimeMillis())
+            s.close() // shutdown 은 대기 중인 전송을 끝까지 수행한 뒤 스레드를 정리한다
             Toast.makeText(this, "PING 전송 — 노트북 창 확인", Toast.LENGTH_SHORT).show()
         }
 

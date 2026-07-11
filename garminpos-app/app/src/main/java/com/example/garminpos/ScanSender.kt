@@ -7,7 +7,13 @@ import java.net.URL
 import java.net.URLEncoder
 import java.util.concurrent.Executors
 
-class ScanSender(private val baseUrl: String, private val device: String) {
+class ScanSender(
+    private val locator: ServerLocator,
+    private val device: String,
+    private val retryBaseDelayMillis: Long = 500L,
+    private val discover: () -> String? = { Discovery.discover(locator.port) },
+    private val onDrop: (String) -> Unit = {},
+) {
     private val pool = Executors.newSingleThreadExecutor()
 
     fun send(sn: String, ts: Long) {
@@ -16,18 +22,26 @@ class ScanSender(private val baseUrl: String, private val device: String) {
 
     private fun trySend(sn: String, ts: Long) {
         val body = "sn=" + enc(sn) + "&ts=" + ts + "&device=" + enc(device)
-        var delay = 500L
+        var delay = retryBaseDelayMillis
         for (attempt in 1..5) {
             if (postOnce(body)) return
+            if (attempt == 1) rediscover() // 첫 실패 = 서버 IP 가 바뀌었을 수 있음
             if (attempt < 5) { Thread.sleep(delay); delay *= 2 }
         }
         Log.w("ScanSender", "drop after 5 retries: $sn")
+        onDrop(sn)
+    }
+
+    private fun rediscover() {
+        val ip = discover() ?: return
+        Log.i("ScanSender", "rediscovered server at $ip")
+        locator.updateIp(ip)
     }
 
     private fun postOnce(body: String): Boolean {
         var conn: HttpURLConnection? = null
         return try {
-            conn = (URL("$baseUrl/scan").openConnection() as HttpURLConnection).apply {
+            conn = (URL("${locator.baseUrl}/scan").openConnection() as HttpURLConnection).apply {
                 requestMethod = "POST"
                 connectTimeout = 2000
                 readTimeout = 2000

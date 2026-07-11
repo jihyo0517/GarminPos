@@ -3,7 +3,7 @@ package com.example.garminpos
 import android.content.Context
 import android.content.SharedPreferences
 
-class Prefs(context: Context) {
+class Prefs(context: Context) : ServerLocator {
     private val sp = context.getSharedPreferences("garminpos", Context.MODE_PRIVATE)
 
     fun registerOnChangeListener(l: SharedPreferences.OnSharedPreferenceChangeListener) =
@@ -16,9 +16,11 @@ class Prefs(context: Context) {
         get() = sp.getString("ip", "192.168.1.5") ?: "192.168.1.5"
         set(v) = sp.edit().putString("ip", v).apply()
 
-    var port: Int
+    override var port: Int
         get() = sp.getInt("port", 8000)
         set(v) = sp.edit().putInt("port", v).apply()
+
+    override fun updateIp(ip: String) { laptopIp = ip }
 
     var device: String
         get() = sp.getString("device", "tablet1") ?: "tablet1"
@@ -32,5 +34,5 @@ class Prefs(context: Context) {
         get() = sp.getLong("burst", 100L)
         set(v) = sp.edit().putLong("burst", v).apply()
 
-    val baseUrl: String get() = "http://$laptopIp:$port"
+    override val baseUrl: String get() = "http://$laptopIp:$port"
 }

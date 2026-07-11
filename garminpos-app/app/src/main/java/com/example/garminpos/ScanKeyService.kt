@@ -2,12 +2,16 @@ package com.example.garminpos
 
 import android.accessibilityservice.AccessibilityService
 import android.content.SharedPreferences
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
+import android.widget.Toast
 
 class ScanKeyService : AccessibilityService() {
     private val TAG = "SNCAP"
+    private val mainHandler = Handler(Looper.getMainLooper())
     private lateinit var assembler: ScanAssembler
     private lateinit var debouncer: Debouncer
     private var sender: ScanSender? = null
@@ -24,7 +28,12 @@ class ScanKeyService : AccessibilityService() {
         assembler = ScanAssembler(p.burstGapMillis)
         debouncer = Debouncer(p.debounceMillis)
         sender?.close()
-        sender = ScanSender(p.baseUrl, p.device)
+        sender = ScanSender(p, p.device, onDrop = { sn ->
+            // 재시도 전부 실패 → 사용자에게 유실을 즉시 알림 (pool 스레드에서 호출되므로 메인으로)
+            mainHandler.post {
+                Toast.makeText(this, "SN 전송 실패: $sn\n수신기 실행/네트워크를 확인하세요", Toast.LENGTH_LONG).show()
+            }
+        })
         Log.d(TAG, "applyPrefs baseUrl=${p.baseUrl} device=${p.device} burst=${p.burstGapMillis} debounce=${p.debounceMillis}")
     }
 
